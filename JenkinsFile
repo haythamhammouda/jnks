@@ -49,7 +49,7 @@ pipeline {
             steps {
                 script {
                     echo 'Construction de l\'image Docker...'
-                    bat "\"${DOCKER_HOME}\\docker\" build -t ${DOCKER_IMAGE_NAME} -f Dockerfile ."
+                    bat "\"${DOCKER_HOME}\\docker\" build -t ${DOCKER_IMAGE_NAME} -f DockerFile ."
                 }
             }
         }
