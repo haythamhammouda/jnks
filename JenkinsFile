@@ -1,13 +1,12 @@
 pipeline {
-     agent any
-     environment {
-          MAVEN_HOME = 'C:\\Program Files\\apache-maven-3.9.5'
-          JAVA_HOME = 'C:\\Program Files\\Java\\jdk-17'
-         DOCKER_IMAGE_NAME = 'todo'
-         DOCKER_HOME = 'C:\\Program Files\\Docker\\Docker\\resources\\bin' // Chemin d'installation de Docker
-         PATH = "${DOCKER_HOME};${env.PATH}" // Ajoute le chemin Docker au PATH
-     }
-     
+    agent any
+    environment {
+        MAVEN_HOME = 'C:\\Program Files\\apache-maven-3.9.5'
+        JAVA_HOME = 'C:\\Program Files\\Java\\jdk-17'
+        DOCKER_IMAGE_NAME = 'todo'
+        DOCKER_HOME = 'C:\\Program Files\\Docker\\Docker\\resources\\bin' // Chemin d'installation de Docker
+        PATH = "${DOCKER_HOME};${env.PATH}" // Ajoute le chemin Docker au PATH
+    }
     stages {
         stage('Checkout') {
             steps {
@@ -17,19 +16,22 @@ pipeline {
 
         stage('Build') {
             steps {
-                bat "${MAVEN_HOME}\\bin\\mvn clean compile"
+                bat "\"${MAVEN_HOME}\\bin\\mvn\" clean compile"
             }
         }
+
         stage('Test') {
             steps {
-                bat "${MAVEN_HOME}\\bin\\mvn test"
+                bat "\"${MAVEN_HOME}\\bin\\mvn\" test"
             }
         }
+
         stage('Package') {
             steps {
-                bat "${MAVEN_HOME}\\bin\\mvn package"
+                bat "\"${MAVEN_HOME}\\bin\\mvn\" package"
             }
         }
+
         stage('Archive Artifacts') {
             steps {
                 archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
@@ -39,7 +41,7 @@ pipeline {
         stage('List Files') {
             steps {
                 bat 'dir'
-                bat 'type DockerFile' // Vérifie que DockerFile existe bien et contient ce que vous attendez
+                bat 'type Dockerfile' // Vérifie que Dockerfile existe bien et contient ce que vous attendez
             }
         }
 
@@ -47,7 +49,7 @@ pipeline {
             steps {
                 script {
                     echo 'Construction de l\'image Docker...'
-                    bat "docker build -t ${DOCKER_IMAGE_NAME} -f DockerFile ."
+                    bat "\"${DOCKER_HOME}\\docker\" build -t ${DOCKER_IMAGE_NAME} -f Dockerfile ."
                 }
             }
         }
